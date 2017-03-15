@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Giphy</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/yeti/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="buttons"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8">
+                <div id="images">
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <form class="form-inline">
+                    <div class="form-group">
+                        <label for="gifName">Gif Search</label>
+                        <input type="text" class="form-control" id="gifName" placeholder="Relax, and choose wisely">
+                    </div>
+                    <button id="gifBtn" type="submit" class="btn btn-default">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script>
+        $("document").ready(function() {
+            var list = ['Stephen Curry', 'Klay Thompson', 'Michael Jordan', 'Kobe Bryant', 'Jimmy Butler'];
+
+            var playerDiv = $("#images");
+
+            for (i = 0; i < list.length; i++) {
+                var btn = $("<button/>");
+                btn.addClass("player");
+                btn.attr("data-player", list[i].replace(" ", "+"));
+                btn.text(list[i]);
+                $('#buttons').append(btn);
+            }
+
+            $("#gifBtn").on("click", function() {
+                // get the value from the input
+                var btnName = $("#gifName").val().trim();
+                var newBtn = $("<button/>");
+                newBtn.attr("data-player", btnName.replace(" ", "+"));
+                newBtn.html(btnName);
+                $('#buttons').append(newBtn);
+            });
+            $('button').on("click", function() {
+                playerDiv.empty();
+                var player = $(this).attr("data-player");
+
+                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + player + "&api_key=dc6zaTOxFJmzC&limit=10";
+                $.ajax({
+                        url: queryURL,
+                        method: "GET"
+                    })
+                    .done(function(response) {
+                        var results = response.data;
+
+                        for (var i = 0; i < results.length; i++) {
+                            var p = $("<p>").text("Rating: " + results[i].rating);
+                            // Creating and storing an image tag
+                            var playerImg = $("<img>");
+                            // Setting the src attribute of the image to a property pulled off the result item
+                            playerImg.attr("src", results[i].images.fixed_height.url);
+                            playerDiv.append(p);
+                            playerDiv.append(playerImg);
+                        }
+                    })
+
+            })
+
+        })
+    </script>
+</body>
+
+</html>
