@@ -26,7 +26,7 @@ function showGifs() {
     var player = $(this).attr("data-player");
     console.log(player);
 
-    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + player + "&api_key=dc6zaTOxFJmzC&limit=10";
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + player + "&api_key=dc6zaTOxFJmzC&limit=10";
     $.ajax({
             url: queryURL,
             method: "GET"
