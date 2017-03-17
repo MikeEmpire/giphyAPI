@@ -26,7 +26,7 @@ function showGifs() {
     var player = $(this).attr("data-player");
     console.log(player);
 
-    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + player + "&api_key=dc6zaTOxFJmzC&limit=10";
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + player + "&api_key=dc6zaTOxFJmzC&limit=10";
     $.ajax({
             url: queryURL,
             method: "GET"
@@ -40,10 +40,24 @@ function showGifs() {
                 var playerImg = $("<img>");
                 // Setting the src attribute of the image to a property pulled off the result item
                 playerImg.attr("src", results[i].images.fixed_height.url);
+                playerImg.addClass("gif");
+                playerImg.attr("data-animate", results[i].images.fixed_height.url);
+                playerImg.attr("data-still", results[i].images.fixed_height.url);
+                playerImg.attr("data-state", "still");
                 playerDiv.append(p);
                 playerDiv.append(playerImg);
             }
-        })
+        });
 }
 $(document).on("click", ".player", showGifs);
+$(document).on("click", ".gif", function() {
+    var state = $(this).attr("data-state");
+    if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+    } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+    }
+});
 generateButtons();
